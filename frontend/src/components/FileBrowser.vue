@@ -246,5 +246,5 @@ export default {
 </script>
 
 <style scoped>
-@import '../assets/css/FileBrowser-light.css';
+@import '../assets/css/light-theme/FileBrowser-light.css';
 </style>

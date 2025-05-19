@@ -5,5 +5,5 @@
 </template>
 
 <style>
-@import './assets/css/App-light.css';
+@import './assets/css/light-theme/App-light.css';
 </style>

@@ -61,5 +61,5 @@ export default {
 </script>
 
 <style scoped>
-@import '../assets/css/TreeNode-light.css';
+@import '../assets/css/light-theme/TreeNode-light.css';
 </style>
