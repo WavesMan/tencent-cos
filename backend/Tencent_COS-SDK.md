@@ -120,7 +120,6 @@ cos.getObject({
 });
 ```
 
-更多示例请参考 [demo文件](https://github.com/tencentyun/cos-nodejs-sdk-v5/tree/master/demo) 。
 
 ## 参考文档
 - [COS术语信息](https://cloud.tencent.com/document/product/436/7751)
