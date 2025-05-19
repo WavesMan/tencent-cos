@@ -1,0 +1,49 @@
+.tree-node {
+  margin: 5px 10px 5px 0; 
+  padding: 5px 0;
+  border: 1px solid #c7c7c798;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.node-header {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 4px;
+}
+
+.node-header:hover {
+  background-color: #f5f5f500;
+}
+
+.node-icon {
+  margin-right: 8px;
+  font-size: 1.2em;
+}
+
+.node-name {
+  font-weight: 500;
+}
+
+.node-count {
+  margin-left: 8px;
+  color: #0f9c47;
+  font-size: 0.9em;
+}
+
+.file-actions {
+  display: inline-block;
+  margin-left: 15px;
+}
+
+.file-actions button {
+  color: #eee;
+  background-color: #2a313c;
+  margin-right: 20px;
+  padding: 2px 8px;
+  border: 1px solid #c7c7c798;
+  border-radius: 4px;
+  font-size: 0.8em;
+}
