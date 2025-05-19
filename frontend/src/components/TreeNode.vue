@@ -61,47 +61,5 @@ export default {
 </script>
 
 <style scoped>
-.tree-node {
-  margin: 5px 0;
-  padding: 5px 0;
-  border-bottom: 1px solid #eee;
-}
-
-.node-header {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  padding: 5px;
-  border-radius: 4px;
-}
-
-.node-header:hover {
-  background-color: #f5f5f5;
-}
-
-.node-icon {
-  margin-right: 8px;
-  font-size: 1.2em;
-}
-
-.node-name {
-  font-weight: 500;
-}
-
-.node-count {
-  margin-left: 8px;
-  color: #888;
-  font-size: 0.9em;
-}
-
-.file-actions {
-  display: inline-block;
-  margin-left: 15px;
-}
-
-.file-actions button {
-  margin-right: 5px;
-  padding: 2px 8px;
-  font-size: 0.8em;
-}
+@import '../assets/css/TreeNode-light.css';
 </style>
