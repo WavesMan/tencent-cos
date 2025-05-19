@@ -16,32 +16,15 @@
         <pre>{{ debugData }}</pre>
       </div>
       
-      <table>
-        <thead>
-          <tr>
-            <th>类型</th>
-            <th>名称</th>
-            <th>大小</th>
-            <th>修改时间</th>
-            <th>操作</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="item in files" :key="item.Key">
-            <td>
-              <span v-if="item.Key.endsWith('/')">📁</span>
-              <span v-else>📄</span>
-            </td>
-            <td>{{ item.Key }}</td>
-            <td>{{ formatFileSize(item.Size) }}</td>
-            <td>{{ formatDate(item.LastModified) }}</td>
-            <td>
-              <button v-if="!item.Key.endsWith('/')" @click="previewFile(item.Key)">预览</button>
-              <button v-if="!item.Key.endsWith('/')" @click="downloadFile(item.Key)">下载</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="tree-view">
+        <tree-node 
+          v-for="node in fileTree" 
+          :key="node.path"
+          :node="node"
+          @preview="previewFile"
+          @download="downloadFile"
+        />
+      </div>
       <div v-if="isTruncated" class="load-more">
         <button @click="loadMore">加载更多</button>
       </div>
@@ -58,8 +41,17 @@
 
 <script>
 import cosApi from '@/api/cos'
+import TreeNode from './TreeNode.vue'
 
 export default {
+  components: {
+    TreeNode
+  },
+  computed: {
+    fileTree() {
+      return this.buildFileTree(this.files)
+    }
+  },
   data() {
     return {
       files: [],
@@ -160,6 +152,45 @@ export default {
       }
     },
     
+    // 将平铺文件列表转换为树形结构
+    buildFileTree(files) {
+      const tree = []
+      const pathMap = {}
+      
+      files.forEach(file => {
+        const pathParts = file.Key.split('/').filter(p => p !== '')
+        let currentLevel = tree
+        
+        pathParts.forEach((part, index) => {
+          const isFile = index === pathParts.length - 1 && !file.Key.endsWith('/')
+          const path = pathParts.slice(0, index + 1).join('/') + (isFile ? '' : '/')
+          
+          if (!pathMap[path]) {
+            const node = {
+              name: part,
+              path: path,
+              isDirectory: !isFile,
+              children: [],
+              data: isFile ? file : null
+            }
+            
+            if (isFile) {
+              pathMap[path] = node
+              currentLevel.push(node)
+            } else {
+              pathMap[path] = node
+              currentLevel.push(node)
+              currentLevel = node.children
+            }
+          } else {
+            currentLevel = pathMap[path].children
+          }
+        })
+      })
+      
+      return tree
+    },
+    
     handleFileChange(event) {
       this.selectedFile = event.target.files[0]
     },
@@ -181,9 +212,14 @@ export default {
       }
     },
     
-    async previewFile(key) {
+    async previewFile(node) {
+      if (node.isDirectory) {
+        console.log('预览目录:', node.path)
+        return
+      }
+      
       try {
-        const response = await cosApi.getPreviewUrl(key)
+        const response = await cosApi.getPreviewUrl(node.path)
         this.previewUrl = response.data.url
       } catch (error) {
         this.error = '获取预览URL失败: ' + error.message
@@ -191,9 +227,14 @@ export default {
       }
     },
     
-    async downloadFile(key) {
+    async downloadFile(node) {
+      if (node.isDirectory) {
+        console.log('目录不支持下载')
+        return
+      }
+      
       try {
-        const response = await cosApi.getDownloadUrl(key)
+        const response = await cosApi.getDownloadUrl(node.path)
         window.open(response.data.url, '_blank')
       } catch (error) {
         this.error = '获取下载URL失败: ' + error.message
@@ -218,6 +259,14 @@ export default {
   white-space: pre-wrap;
   word-wrap: break-word;
   margin: 0;
+}
+
+.tree-view {
+  margin-top: 20px;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  padding: 10px;
+  background-color: #fff;
 }
 
 /* 其他原有样式... */
